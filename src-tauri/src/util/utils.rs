@@ -4,8 +4,6 @@ use std::fs::create_dir_all;
 use std::io::Error;
 use std::path::PathBuf;
 
-use crate::util::file_manager;
-
 use super::file_manager::ConfigManager;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -22,7 +20,7 @@ pub struct Configs {
     pub user_data: User,
 }
 
-impl file_manager::ConfigManager for Configs {
+impl ConfigManager for Configs {
     fn default() -> Self {
         Configs {
             specialty: String::from(""),

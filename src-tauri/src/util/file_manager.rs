@@ -27,17 +27,28 @@ pub trait ConfigManager {
             Ok(default_config)
         }
     }
+
+    fn update(&self, path: &PathBuf) -> io::Result<()>
+    where
+        Self: Serialize,
+    {
+        // Serialize the current instance and write it to the file
+        let config_content = serde_json::to_string_pretty(&self)?;
+        let mut file = fs::File::create(&path)?;
+        file.write_all(config_content.as_bytes())?;
+        Ok(())
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
     use tempfile::tempdir; // Import the tempdir function from the tempfile crate
+
     #[derive(Serialize, Deserialize, Debug)]
     pub struct TestFile {
         pub name: String,
     }
-
     impl ConfigManager for TestFile {
         fn default() -> Self {
             TestFile {
@@ -48,14 +59,31 @@ mod test {
 
     #[test]
     fn test_load_or_create() {
-        let test_name = "test.json".to_string();
+        let test_file = "test.json";
         let temp_dir = tempdir().expect("Failed to create temp dir");
-        let file_path = temp_dir.path().join(test_name);
+        let file_path = temp_dir.path().join(test_file);
 
         let new_file =
             TestFile::load_or_create(&file_path).expect("Error: Failed to load or create file");
-
         assert!(file_path.exists());
         assert_eq!(new_file.name, "");
+    }
+
+    #[test]
+    fn test_save() {
+        let test_file = "test.json";
+        let temp_dir = tempdir().expect("Failed to create temporary files");
+        let file_path = temp_dir.path().join(test_file);
+
+        let mut new_file =
+            TestFile::load_or_create(&file_path).expect("Error: Faile to load or create file");
+
+        assert_eq!(new_file.name, "");
+
+        new_file.name = "Something new".to_string();
+
+        new_file.update(&file_path).expect("Error updating file");
+        let get_saved_file = TestFile::load_or_create(&file_path).expect("error");
+        assert_eq!(get_saved_file.name, "Something new".to_string());
     }
 }
