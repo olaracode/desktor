@@ -4,6 +4,7 @@
 use std::fs::create_dir_all;
 extern crate dotenv;
 
+mod comands;
 mod util;
 
 fn main() {
@@ -24,6 +25,7 @@ fn main() {
 
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![comands::config::get_configs])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
