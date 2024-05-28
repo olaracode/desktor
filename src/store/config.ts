@@ -1,0 +1,64 @@
+import { StateCreator } from "zustand";
+import { invoke } from "@tauri-apps/api";
+import { toast } from "sonner";
+import {
+  ConfigSlice,
+  ConfigResponse,
+  Config,
+  UserData,
+  ConfigData,
+} from "./config.type";
+
+const configSlice: StateCreator<ConfigSlice, [], [], ConfigSlice> = (
+  set,
+  get
+) => ({
+  config: null,
+  getFromFile: async () => {
+    const response = (await invoke("get_configs")) as ConfigResponse;
+    set((state) => ({ config: response }));
+  },
+  updateUser: async (data: UserData) => {
+    try {
+      const response = (await invoke("update_user", data)) as Config;
+      if (typeof response === "string") throw new Error(response);
+      const configs = get().config;
+      if (configs) {
+        set((state) => ({ config: { ...configs, config_file: response } }));
+      }
+      toast.success("Usuario actualizado con exito");
+      return true;
+    } catch (e) {
+      if (typeof e === "string") {
+        toast.error(e);
+      } else {
+        toast.error("Ha ocurrido un error");
+      }
+      return false;
+    }
+  },
+  updateConfigData: async (data: ConfigData) => {
+    try {
+      const response = (await invoke("update_config", data)) as Config;
+      console.log(response);
+      const configs = get().config;
+      if (typeof response == "string") {
+        throw new Error(response);
+      }
+      if (configs) {
+        set((state) => ({ config: { ...configs, config_file: response } }));
+      }
+      toast.success("Configuracion actualizada");
+      return true;
+    } catch (e) {
+      if (typeof e === "string") {
+        toast.error(e);
+      } else {
+        toast.error("Ha ocurrido un error inesperado");
+      }
+      return false;
+    }
+  },
+});
+
+export default configSlice;
