@@ -8,8 +8,8 @@ use super::file_manager::ConfigManager;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
-    name: String,
-    pw: String,
+    pub name: String,
+    pub pw: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
