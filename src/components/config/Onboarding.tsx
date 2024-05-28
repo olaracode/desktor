@@ -21,7 +21,7 @@ export function Onboarding() {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     if (user.name.trim() === "" || user.pw.trim() === "") {
@@ -30,8 +30,10 @@ export function Onboarding() {
 
       return;
     }
-    updateUser(user);
-    router.push("/config/setup");
+    const response = await updateUser(user);
+    if (response) {
+      router.push("/config/setup");
+    }
     setIsLoading(false);
     // todo
   };
