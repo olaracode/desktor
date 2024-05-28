@@ -68,7 +68,7 @@ pub fn update_user(name: String, pw: String) -> Result<utils::Configs, String> {
 }
 
 #[tauri::command]
-pub fn update_config(
+pub fn update_base_data(
     api_key: String,
     email: String,
     specialty: String,
@@ -79,5 +79,33 @@ pub fn update_config(
     config_file.email = email;
     config_file.specialty = specialty;
     config_file.update(&path).map_err(|e| e.to_string())?;
+    Ok(config_file)
+}
+
+#[tauri::command]
+pub fn update_config(
+    api_key: Option<String>,
+    specialty: Option<String>,
+    email: Option<String>,
+    name: Option<String>,
+    pw: Option<String>,
+) -> Result<utils::Configs, String> {
+    let path = get_config_path()?;
+    let mut config_file = utils::Configs::load_or_create(&path).map_err(|e| e.to_string())?;
+    if let Some(key) = api_key {
+        config_file.api_key = key;
+    }
+    if let Some(s) = specialty {
+        config_file.specialty = s;
+    }
+    if let Some(e) = email {
+        config_file.email = e;
+    }
+    if let Some(n) = name {
+        config_file.user_data.name = n;
+    }
+    if let Some(p) = pw {
+        config_file.user_data.pw = p;
+    }
     Ok(config_file)
 }
