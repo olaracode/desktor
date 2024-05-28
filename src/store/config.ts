@@ -1,3 +1,4 @@
+"use client";
 import { StateCreator } from "zustand";
 import { invoke } from "@tauri-apps/api";
 import { toast } from "sonner";
@@ -8,6 +9,7 @@ import {
   UserData,
   ConfigData,
 } from "./config.type";
+import tauriCommands from "@/lib/commands";
 
 const configSlice: StateCreator<ConfigSlice, [], [], ConfigSlice> = (
   set,
@@ -15,12 +17,17 @@ const configSlice: StateCreator<ConfigSlice, [], [], ConfigSlice> = (
 ) => ({
   config: null,
   getFromFile: async () => {
-    const response = (await invoke("get_configs")) as ConfigResponse;
+    const response = (await invoke(
+      tauriCommands.config.getConfigs
+    )) as ConfigResponse;
     set((state) => ({ config: response }));
   },
   updateUser: async (data: UserData) => {
     try {
-      const response = (await invoke("update_user", data)) as Config;
+      const response = (await invoke(
+        tauriCommands.config.updateUser,
+        data
+      )) as Config;
       if (typeof response === "string") throw new Error(response);
       const configs = get().config;
       if (configs) {
@@ -39,7 +46,10 @@ const configSlice: StateCreator<ConfigSlice, [], [], ConfigSlice> = (
   },
   updateConfigData: async (data: ConfigData) => {
     try {
-      const response = (await invoke("update_config", data)) as Config;
+      const response = (await invoke(
+        tauriCommands.config.updateConfig,
+        data
+      )) as Config;
       console.log(response);
       const configs = get().config;
       if (typeof response == "string") {
