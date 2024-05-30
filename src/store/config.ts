@@ -8,6 +8,7 @@ import {
   Config,
   UserData,
   ConfigData,
+  ConfigForm,
 } from "./config.type";
 import tauriCommands from "@/lib/commands";
 
@@ -20,6 +21,7 @@ const configSlice: StateCreator<ConfigSlice, [], [], ConfigSlice> = (
     const response = (await invoke(
       tauriCommands.config.getConfigs
     )) as ConfigResponse;
+    console.log(response);
     set((state) => ({ config: response }));
   },
   updateUser: async (data: UserData) => {
@@ -44,7 +46,7 @@ const configSlice: StateCreator<ConfigSlice, [], [], ConfigSlice> = (
       return false;
     }
   },
-  updateConfigData: async (data: ConfigData) => {
+  updateConfigData: async (data: ConfigForm) => {
     try {
       const response = (await invoke(
         tauriCommands.config.updateConfig,

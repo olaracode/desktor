@@ -18,6 +18,7 @@ pub struct Configs {
     pub api_key: String,
     pub email: String,
     pub user_data: User,
+    pub base_price: i32,
 }
 
 impl ConfigManager for Configs {
@@ -26,6 +27,7 @@ impl ConfigManager for Configs {
             specialty: String::from(""),
             api_key: String::from(""),
             email: String::from(""),
+            base_price: 0,
             user_data: User {
                 name: String::from(""),
                 pw: String::from(""),

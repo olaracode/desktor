@@ -1,3 +1,4 @@
+"use client";
 import { create } from "zustand";
 import configSlice from "./config";
 import { ConfigSlice } from "./config.type";

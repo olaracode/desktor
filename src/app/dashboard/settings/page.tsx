@@ -1,7 +1,7 @@
 import React from "react";
-
-const page = () => {
-  return <div>page</div>;
+import ConfigSettings from "@/components/config/ConfigSettings";
+const Settings = () => {
+  return <ConfigSettings />;
 };
 
-export default page;
+export default Settings;

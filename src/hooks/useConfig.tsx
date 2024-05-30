@@ -1,20 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import useBoundStore from "@/store";
 import { useRouter } from "next/navigation";
-const Config = () => {
+
+const useConfig = () => {
   const router = useRouter();
   const { getFromFile, config } = useBoundStore();
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log(config);
+    if (typeof window === "undefined") return;
+    console.log(window);
     if (!config) {
       getFromFile();
     } else {
+      console.log(config);
       if (config.status == "UserSetup") router.push("/config/user");
       if (config.status == "Setup") router.push("/config/setup");
       if (config.status == "Complete") router.push("/dashboard");
     }
   }, [config]);
-  return null;
+  return;
 };
 
-export default Config;
+export default useConfig;

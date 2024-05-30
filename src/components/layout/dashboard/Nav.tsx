@@ -6,22 +6,18 @@ const links = [
   {
     Icon: UserIcon,
     content: "Patients",
-    href: "#",
+    href: "patients",
   },
   {
     Icon: CalendarIcon,
     content: "Appointments",
-    href: "#",
+    href: "appointments",
   },
-  {
-    Icon: PillIcon,
-    content: "Preescriptions",
-    href: "#",
-  },
+
   {
     Icon: FileTextIcon,
     content: "Reports",
-    href: "#",
+    href: "reports",
   },
 ];
 
@@ -35,7 +31,8 @@ const Nav = ({ dialog = false }) => {
         return (
           <Link
             className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            href={href}
+            href={`/dashboard/${href}`}
+            key={content + href}
           >
             <Icon className="h-4 w-4" />
             {content}

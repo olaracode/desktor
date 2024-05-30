@@ -107,5 +107,6 @@ pub fn update_config(
     if let Some(p) = pw {
         config_file.user_data.pw = p;
     }
+    config_file.update(&path).map_err(|e| e.to_string())?;
     Ok(config_file)
 }

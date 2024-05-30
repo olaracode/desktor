@@ -13,8 +13,8 @@ import Nav from "./Nav";
 const DashboardDialog = () => {
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
+      <DialogTrigger asChild>
+        <Button variant={"outline"} size="icon">
           <MenuIcon />
           <span className="sr-only">Toggle navigation menu</span>
         </Button>
